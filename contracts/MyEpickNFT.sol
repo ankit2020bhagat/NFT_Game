@@ -12,6 +12,8 @@ contract MyEpicNFT is ERC721 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
+    uint256 randNounce = 0;
+
     struct characterAttribute {
         uint256 characterIndex;
         string name;
@@ -23,16 +25,51 @@ contract MyEpicNFT is ERC721 {
 
     mapping(uint256 => characterAttribute) public nftholderAttribute;
 
+    struct Big_Boss {
+        string name;
+        string imageURI;
+        uint256 Hp;
+        uint256 maxHp;
+        uint256 attackDamage;
+    }
+
+    Big_Boss public boss;
+
     mapping(address => uint256) public nftholder;
 
     characterAttribute[] defaultCharacter;
+
+    ///plarer have 0 Hp
+    error plrinsuffientHp();
+
+    ///Boss have 0 Hp
+    error bossinsuffientHp();
 
     constructor(
         string[] memory characterName,
         string[] memory characterImageUri,
         uint256[] memory characterHp,
-        uint256[] memory characterAttackDmg
+        uint256[] memory characterAttackDmg,
+        string memory bossName,
+        string memory bossimageUri,
+        uint256 bossHp,
+        uint256 boosAttackDamage
     ) ERC721("Heros", "Hero") {
+        boss = Big_Boss({
+            name: bossName,
+            imageURI: bossimageUri,
+            Hp: bossHp,
+            maxHp: bossHp,
+            attackDamage: boosAttackDamage
+        });
+
+        console.log(
+            "Done initializing boss %s w/ HP %s, img  %s",
+            boss.name,
+            boss.Hp,
+            boss.imageURI
+        );
+
         for (uint256 i = 0; i < characterName.length; i++) {
             defaultCharacter.push(
                 characterAttribute({
@@ -55,6 +92,17 @@ contract MyEpicNFT is ERC721 {
             );
         }
         _tokenIds.increment();
+    }
+
+    function getRandomInt(uint256 modulus) public returns (uint256) {
+        randNounce++;
+
+        return
+            uint256(
+                keccak256(
+                    abi.encodePacked(block.timestamp, msg.sender, randNounce)
+                )
+            ) % modulus;
     }
 
     function mintCharacterNFT(uint256 _characterIndex) external {
@@ -119,5 +167,63 @@ contract MyEpicNFT is ERC721 {
             abi.encodePacked("data:application/json;base64,", json)
         );
         return output;
+    }
+
+    function attackboss() public {
+        uint256 tokenId = nftholder[msg.sender];
+
+        characterAttribute storage player = nftholderAttribute[tokenId];
+
+        console.log(
+            "\nPlayer chaeracter %s about to attack.Has /w %s Hp and %s Attack Damage",
+            player.name,
+            player.hp,
+            player.attackDamage
+        );
+
+        console.log(
+            "\n Boss %s has /w %s Hp and %s Ad",
+            boss.name,
+            boss.Hp,
+            boss.attackDamage
+        );
+
+        if (player.hp <= 0) {
+            revert plrinsuffientHp();
+        }
+
+        if (boss.Hp <= 0) {
+            revert bossinsuffientHp();
+        }
+
+        if (boss.Hp < player.attackDamage) {
+            boss.Hp = 0;
+            console.log("Boss is dead!!");
+        } else {
+            if (getRandomInt(10) > 5) {
+                console.log("Random Integer ",getRandomInt(10));
+                boss.Hp = boss.Hp - player.attackDamage;
+                console.log(
+                    "Player %s attack boss.New  boss Hp :",
+                    player.name,
+                    boss.Hp
+                );
+            }
+            else{
+                console.log("%s player missed!!",player.name);
+            }
+        }
+
+        if (player.hp <= boss.attackDamage) {
+            player.hp = 0;
+        } else {
+            player.hp = player.hp - boss.attackDamage;
+        }
+
+        console.log(
+            "Boss attack on player %s .New Player Hp:",
+            player.name,
+            player.hp
+        );
     }
 }

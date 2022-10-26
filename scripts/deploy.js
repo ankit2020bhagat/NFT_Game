@@ -2,6 +2,7 @@
 const { ethers } = require("hardhat");
 
 async function main() {
+  const [...players]= await ethers.getSigners();
   const nftContract = await ethers.getContractFactory("MyEpicNFT");
   const deployContract = await nftContract.deploy(
     ["ankit", "kumar", "bhagat"],
@@ -10,31 +11,43 @@ async function main() {
       "https://i.imgur.com/WMB6g9u.png"],
 
     [100, 200, 300],
-    [100, 50, 25]
+    [100, 50, 25],
+    "elon miusk",
+    "https://i.imgur.com/AksR0tt.png",
+    10000,
+    50
   );
   await deployContract.deployed();
   console.log("Contract Address:", deployContract.address);
 
-  let txn = await deployContract.mintCharacterNFT(0);
+  let txn = await deployContract.mintCharacterNFT(2);
   await txn.wait();
   console.log("Minted NFT #1");
+  console.log("player %s has tokenid",players[0].address, await deployContract.nftholder(players[0].address));
 
-  txn = await deployContract.mintCharacterNFT(1);
-  await txn.wait();
-  console.log("Minted NFT #2");
+  // txn = await deployContract.mintCharacterNFT(1);
+  // await txn.wait();
+  // console.log("Minted NFT #2");
 
-  txn = await deployContract.mintCharacterNFT(2);
-  await txn.wait();
-  console.log("Minted NFT #3");
+  // txn = await deployContract.mintCharacterNFT(2);
+  // await txn.wait();
+  // console.log("Minted NFT #3");
 
-  txn = await deployContract.mintCharacterNFT(1);
-  await txn.wait();
-  console.log("Minted NFT #4");
+  // txn = await deployContract.mintCharacterNFT(1);
+  // await txn.wait();
+  // console.log("Minted NFT #4");
 
  // console.log("Token ID %s have %s", 1, await deployContract.nftholderAttribute(1));
 
   // let txn_tokenUri = await deployContract.tokenURI(1);
   // console.log("Token Uri of index of %s is",1,txn_tokenUri);
+  
+  txn = await deployContract.attackboss();
+  await txn.wait();
+
+  txn = await deployContract.attackboss();
+  await txn.wait();
+
 
 }
 
