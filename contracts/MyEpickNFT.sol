@@ -39,6 +39,10 @@ contract MyEpicNFT is ERC721 {
 
     characterAttribute[] defaultCharacter;
 
+    event CharacterNFTMinted (address sender,uint tokenId,uint characterIndex);
+
+    event AttackComplete (address sender,uint newBossHp,uint newPlayerHp);
+
     ///plarer have 0 Hp
     error plrinsuffientHp();
 
@@ -128,6 +132,8 @@ contract MyEpicNFT is ERC721 {
         nftholder[msg.sender] = newItemId;
 
         _tokenIds.increment();
+
+        emit CharacterNFTMinted(msg.sender, newItemId, _characterIndex);
     }
 
     function tokenURI(uint256 _tokenId)
@@ -167,6 +173,25 @@ contract MyEpicNFT is ERC721 {
             abi.encodePacked("data:application/json;base64,", json)
         );
         return output;
+    }
+    
+    function checkIfUserHasNFT() external view returns(characterAttribute memory){
+        uint userNFTtokenId = nftholder[msg.sender];
+
+        if(userNFTtokenId>0){
+           return nftholderAttribute[userNFTtokenId];
+        }
+        else{
+            characterAttribute memory emptyStruct;
+            return emptyStruct;
+        }
+    }
+    function getAllDefaultcharacter() public view returns(characterAttribute[] memory){
+        return defaultCharacter;
+    }
+
+    function getBoss() external view returns(Big_Boss memory)  {
+        return boss;
     }
 
     function attackboss() public {
@@ -225,5 +250,7 @@ contract MyEpicNFT is ERC721 {
             player.name,
             player.hp
         );
+
+        emit AttackComplete(msg.sender, boss.Hp,  player.hp);
     }
 }

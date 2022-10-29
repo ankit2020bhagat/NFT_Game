@@ -20,11 +20,13 @@ async function main() {
   await deployContract.deployed();
   console.log("Contract Address:", deployContract.address);
 
-  let txn = await deployContract.mintCharacterNFT(2);
-  await txn.wait();
-  console.log("Minted NFT #1");
-  console.log("player %s has tokenid",players[0].address, await deployContract.nftholder(players[0].address));
-
+  // let txn = await deployContract.connect(players[1]).mintCharacterNFT(2);
+  // await txn.wait();
+  // console.log("Minted NFT #1");
+  // console.log("player %s has tokenid",players[0].address, await deployContract.nftholder(players[0].address));
+  
+  // console.log("user have :", await deployContract.connect(players[0]).checkIfUserHasNFT() )
+ 
   // txn = await deployContract.mintCharacterNFT(1);
   // await txn.wait();
   // console.log("Minted NFT #2");
@@ -41,12 +43,14 @@ async function main() {
 
   // let txn_tokenUri = await deployContract.tokenURI(1);
   // console.log("Token Uri of index of %s is",1,txn_tokenUri);
-  
-  txn = await deployContract.attackboss();
-  await txn.wait();
 
-  txn = await deployContract.attackboss();
-  await txn.wait();
+
+  
+  // txn = await deployContract.attackboss();
+  // await txn.wait();
+
+  // txn = await deployContract.attackboss();
+  // await txn.wait();
 
 
 }
@@ -60,3 +64,4 @@ const runMain = async () => {
   }
 }
 runMain();
+//0x55F7840A48441351891E1bf9E12286A1c924A451
