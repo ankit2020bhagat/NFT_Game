@@ -3,7 +3,7 @@ const { ethers } = require("hardhat");
 
 async function main() {
   const [...players]= await ethers.getSigners();
-  const nftContract = await ethers.getContractFactory("MyEpicNFT");
+  const nftContract = await ethers.getContractFactory("MyEpicGame");
   const deployContract = await nftContract.deploy(
     ["ankit", "kumar", "bhagat"],
     ["https://i.imgur.com/pKd5Sdk.png",

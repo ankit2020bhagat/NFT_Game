@@ -4,6 +4,9 @@ require("@nomicfoundation/hardhat-toolbox");
 require('dotenv').config();
 module.exports = {
   solidity: "0.8.17",
+  paths: {
+    artifacts: './nft-game-frontend/src/artifacts',
+  },
   networks: {
     goerli: {
       url:  process.env.GOERLI_API_KEY_URL,

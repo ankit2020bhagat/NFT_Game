@@ -8,7 +8,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 
-contract MyEpicNFT is ERC721 {
+contract MyEpicGame
+ is ERC721 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
