@@ -28,9 +28,9 @@ contract MyEpicGame
 
     struct Big_Boss {
         string name;
-        string imageURI;
-        uint256 Hp;
-        uint256 maxHp;
+        string imageUri;
+        uint256 hp;
+        uint256 maxhp;
         uint256 attackDamage;
     }
 
@@ -62,17 +62,17 @@ contract MyEpicGame
     ) ERC721("Heros", "Hero") {
         boss = Big_Boss({
             name: bossName,
-            imageURI: bossimageUri,
-            Hp: bossHp,
-            maxHp: bossHp,
+            imageUri: bossimageUri,
+            hp: bossHp,
+            maxhp: bossHp,
             attackDamage: boosAttackDamage
         });
 
         console.log(
             "Done initializing boss %s w/ HP %s, img  %s",
             boss.name,
-            boss.Hp,
-            boss.imageURI
+            boss.hp,
+            boss.imageUri
         );
 
         for (uint256 i = 0; i < characterName.length; i++) {
@@ -159,7 +159,7 @@ contract MyEpicGame
                 CharacterAttribute.name,
                 "--NFT #: ",
                 Strings.toString(_tokenId),
-                '", "description": "This is an NFT that lets people play in the game Metaverse Slayer!", "image": "',
+                 '", "description": "An epic NFT", "image": "ipfs://',
                 CharacterAttribute.imageUri,
                 '", "attributes": [ { "trait_type": "Health Points", "value": ',
                 strhp,
@@ -210,7 +210,7 @@ contract MyEpicGame
         console.log(
             "\n Boss %s has /w %s Hp and %s Ad",
             boss.name,
-            boss.Hp,
+            boss.hp,
             boss.attackDamage
         );
 
@@ -218,21 +218,21 @@ contract MyEpicGame
             revert plrinsuffientHp();
         }
 
-        if (boss.Hp <= 0) {
+        if (boss.hp <= 0) {
             revert bossinsuffientHp();
         }
 
-        if (boss.Hp < player.attackDamage) {
-            boss.Hp = 0;
+        if (boss.hp < player.attackDamage) {
+            boss.hp = 0;
             console.log("Boss is dead!!");
         } else {
             if (getRandomInt(10) > 5) {
                 console.log("Random Integer ",getRandomInt(10));
-                boss.Hp = boss.Hp - player.attackDamage;
+                boss.hp = boss.hp - player.attackDamage;
                 console.log(
                     "Player %s attack boss.New  boss Hp :",
                     player.name,
-                    boss.Hp
+                    boss.hp
                 );
             }
             else{
@@ -252,6 +252,6 @@ contract MyEpicGame
             player.hp
         );
 
-        emit AttackComplete(msg.sender, boss.Hp,  player.hp);
+        emit AttackComplete(msg.sender, boss.hp,  player.hp);
     }
 }
